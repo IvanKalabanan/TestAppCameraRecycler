@@ -4,6 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="five_dp">5dp</dimen>
     <dimen name="twenty_dp">20dp</dimen>
-    <dimen name="floating_button_size">50dp</dimen>
+    <dimen name="floating_button_size">60dp</dimen>
     <dimen name="item_size">75dp</dimen>
+    <dimen name="two_dp">2dp</dimen>
+    <dimen name="three_dp">3dp</dimen>
+    <dimen name="ten_dp">10dp</dimen>
 </resources>

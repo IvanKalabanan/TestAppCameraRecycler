@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TestAppCameraRecycler</string>
+    <string name="transition_name">fullPhoto</string>
+    <string name="accept_permissions">Please accept app permissions for correct app use</string>
+    <string name="file_problem">Problem with file, try one more time</string>
 </resources>

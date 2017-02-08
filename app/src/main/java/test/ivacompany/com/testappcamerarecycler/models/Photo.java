@@ -1,8 +1,10 @@
 package test.ivacompany.com.testappcamerarecycler.models;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -12,33 +14,29 @@ import io.realm.annotations.Ignore;
  */
 
 public class Photo extends RealmObject {
+    private long id;
+    private String imageUriString;
     @Ignore
-    private Bitmap image;
-    private byte[] byteImage;
+    private Uri imageUri;
     private String date;
     private String name;
 
     public Photo() {}
 
-    public Photo(Bitmap image, String date, String name) {
-        this.image = image;
-        this.byteImage = toByte(image);
+    public Photo(long id, Uri imageUri, String date, String name) {
+        this.id = id;
+        this.imageUri = imageUri;
+        this.imageUriString = imageUri.toString();
         this.date = date;
         this.name = name;
     }
 
-    private byte[] toByte(Bitmap image) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+    public Uri getImageUri() {
+        return imageUri;
     }
 
-    public Bitmap getImage() {
-        return image;
-    }
-
-    public void setImage(Bitmap image) {
-        this.image = image;
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getDate() {
@@ -57,11 +55,19 @@ public class Photo extends RealmObject {
         this.name = name;
     }
 
-    public byte[] getByteImage() {
-        return byteImage;
+    public long getId() {
+        return id;
     }
 
-    public void setByteImage(byte[] byteImage) {
-        this.byteImage = byteImage;
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void convertImageUri() {
+        this.imageUri = Uri.parse(this.imageUriString);
+    }
+
+    public String getImageUriString() {
+        return imageUriString;
     }
 }

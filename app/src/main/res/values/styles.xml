@@ -6,11 +6,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="ItemTextViewStyle">
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">@dimen/twenty_five_sp</item>
-        <item name="android:textStyle">bold|italic</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <dimen name="twenty_five_sp">25sp</dimen>
