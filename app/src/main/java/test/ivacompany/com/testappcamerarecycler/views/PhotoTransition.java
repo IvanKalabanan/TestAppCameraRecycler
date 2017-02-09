@@ -1,11 +1,9 @@
 package test.ivacompany.com.testappcamerarecycler.views;
 
-import android.content.Context;
 import android.transition.ChangeBounds;
 import android.transition.ChangeImageTransform;
 import android.transition.ChangeTransform;
 import android.transition.TransitionSet;
-import android.util.AttributeSet;
 
 /**
  * Created by iva on 07.02.17.
@@ -14,14 +12,6 @@ import android.util.AttributeSet;
 public class PhotoTransition extends TransitionSet {
 
     public PhotoTransition() {
-        init();
-    }
-
-    /**
-     * This constructor allows us to use this transition in XML
-     */
-    public PhotoTransition(Context context, AttributeSet attrs) {
-        super(context, attrs);
         init();
     }
 

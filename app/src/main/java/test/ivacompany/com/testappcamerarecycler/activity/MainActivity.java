@@ -15,8 +15,6 @@ import test.ivacompany.com.testappcamerarecycler.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_ASK_PERMISSIONS = 48;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         requestForPermissions();
 
-        Utils.initRealm();
+        Utils.initRealm(this);
 
         getSupportFragmentManager()
                 .beginTransaction()
