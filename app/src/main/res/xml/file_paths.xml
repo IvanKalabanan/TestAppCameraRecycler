@@ -2,5 +2,5 @@
 <paths>
     <external-path
         name="photo"
-        path="Android/data/test.ivacompany.com.testappcamerarecycler/files/Pictures" />
+        path="." />
 </paths>

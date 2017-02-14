@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -31,6 +32,8 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import test.ivacompany.com.testappcamerarecycler.BuildConfig;
 import test.ivacompany.com.testappcamerarecycler.R;
 import test.ivacompany.com.testappcamerarecycler.adapters.PhotoRecyclerViewAdapter;
 import test.ivacompany.com.testappcamerarecycler.models.Photo;
@@ -44,7 +47,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by root on 06.02.17.
  */
 
-public class MainFragment extends Fragment {
+public class MainFragment extends BaseFragment {
 
     public static final String TAG = "MainFragment";
 
@@ -71,6 +74,8 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        realm.init(getContext());
+        realm = Realm.getDefaultInstance();
         super.onActivityCreated(savedInstanceState);
 
         initRecyclerView();
@@ -86,7 +91,7 @@ public class MainFragment extends Fragment {
     private void initRecyclerView() {
         adapter = new PhotoRecyclerViewAdapter(
                 getContext(),
-                Utils.readFromDB());
+                readFromDB());
         GridLayoutManager mLayoutManager = new GridLayoutManager(
                 getContext(),
                 2
@@ -102,7 +107,7 @@ public class MainFragment extends Fragment {
 
                     @Override
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        Utils.removeFromRealm(adapter.getItem(viewHolder.getAdapterPosition()).getId());
+                        removeFromRealm(adapter.getItem(viewHolder.getAdapterPosition()).getId());
                         adapter.removeItem(viewHolder.getAdapterPosition());
                     }
                 });
@@ -117,7 +122,11 @@ public class MainFragment extends Fragment {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         String timeStamp = new SimpleDateFormat("ssMM").format(new Date());
         photoName = "Photo_" + timeStamp + ".jpg";
-        photoURI = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), photoName));
+        photoURI = FileProvider.getUriForFile(
+                getContext(),
+                BuildConfig.APPLICATION_ID + ".provider",
+                new File(Environment.getExternalStorageDirectory(), photoName));
+
         if (photoURI != null) {
             takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, Constants.IMAGE_CAPTURE);
@@ -140,7 +149,7 @@ public class MainFragment extends Fragment {
                     decodeAndSaveImage();
 
                     addNewPhotoItem(new Photo(
-                                    Utils.getRealm().where(Photo.class).max(Constants.ID).longValue() + 1,
+                                    realm.where(Photo.class).max(Constants.ID).longValue() + 1,
                                     photoURI,
                                     formatter.format(new Date()),
                                     photoName
@@ -217,7 +226,7 @@ public class MainFragment extends Fragment {
     }
 
     private void addNewPhotoItem(Photo photo) {
-        Utils.addToDB(photo);
+        addToDB(photo);
         adapter.addItem(photo);
     }
 }

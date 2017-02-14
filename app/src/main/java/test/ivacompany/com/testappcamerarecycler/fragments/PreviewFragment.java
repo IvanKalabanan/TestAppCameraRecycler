@@ -15,6 +15,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 import test.ivacompany.com.testappcamerarecycler.R;
 import test.ivacompany.com.testappcamerarecycler.models.Photo;
 import test.ivacompany.com.testappcamerarecycler.utils.Constants;
@@ -24,7 +25,7 @@ import test.ivacompany.com.testappcamerarecycler.utils.Utils;
  * Created by iva on 07.02.17.
  */
 
-public class PreviewFragment extends Fragment {
+public class PreviewFragment extends BaseFragment {
 
     @BindView(R.id.photoPreview)
     ImageView photoPreview;
@@ -63,11 +64,6 @@ public class PreviewFragment extends Fragment {
 
         currentPhotoId = getArguments().getLong(Constants.ID);
         photoPreview.setTransitionName(Utils.getTransitionName(currentPhotoId));
-        Photo p = Utils.getPhoto(currentPhotoId);
-
-        photoPreview.setImageURI(p.getImageUri());
-        photoDate.setText(p.getDate());
-        photoName.setText(p.getName());
 
         return root;
     }
@@ -75,14 +71,21 @@ public class PreviewFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        realm = Realm.getDefaultInstance();
 
-        photoList = Utils.readFromDB();
+        Photo p = getPhoto(currentPhotoId);
+
+        photoPreview.setImageURI(p.getImageUri());
+        photoDate.setText(p.getDate());
+        photoName.setText(p.getName());
+
+        photoList = readFromDB();
     }
 
     @OnClick(R.id.removePhoto)
     public void removePhotoIconClick() {
         if (photoList.size() == 1) {
-            Utils.removeFromRealm(currentPhotoId);
+            removeFromRealm(currentPhotoId);
             getActivity().onBackPressed();
             return;
         }
@@ -91,14 +94,14 @@ public class PreviewFragment extends Fragment {
             long photoId = photoList.get(i).getId();
             if (i == (photoList.size() - 1)) {
                 newPhoto = photoList.get(0);
-                Utils.removeFromRealm(currentPhotoId);
+                removeFromRealm(currentPhotoId);
                 currentPhotoId = newPhoto.getId();
                 updatePhoto(newPhoto);
                 photoList.remove(i);
                 break;
             }
             if (photoId == currentPhotoId) {
-                Utils.removeFromRealm(currentPhotoId);
+                removeFromRealm(currentPhotoId);
                 newPhoto = photoList.get(i + 1);
                 currentPhotoId = newPhoto.getId();
                 updatePhoto(newPhoto);
@@ -115,4 +118,9 @@ public class PreviewFragment extends Fragment {
         photoName.setText(p.getName());
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realm.close();
+    }
 }

@@ -22,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
         requestForPermissions();
 
-        Utils.initRealm(this);
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.mainContainer,
